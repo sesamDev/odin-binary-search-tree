@@ -14,9 +14,11 @@ class Node
 end
 
 class Tree
+  attr_accessor :arr, :root
+
   def initialize(array)
-    n = array.length
-    @root = build_tree(array, 0, n - 1)
+    @arr = array.sort.uniq
+    @root = build_tree(@arr, 0, @arr.length - 1)
   end
 
   def build_tree(arr, start_i, end_i)
@@ -31,6 +33,11 @@ class Tree
     root
   end
 
+  def insert(value)
+    @arr.push(value).sort!.uniq!
+    @root = build_tree(@arr, 0, @arr.length - 1)
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
@@ -38,7 +45,9 @@ class Tree
   end
 end
 
-my_array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+my_array = [2, 1, 3, 4, 5, 6, 12]
 
 tree = Tree.new(my_array)
+tree.pretty_print
+tree.insert(7)
 tree.pretty_print
