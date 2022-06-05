@@ -61,11 +61,8 @@ class Tree
       root.right = delete_node(root.right, value)
     else
       # node with only one child or no child
-      if root.left.nil?
-        return root.right
-      elsif root.right.nil?
-        return root.left
-      end
+      return root.right if root.left.nil?
+      return root.left if root.right.nil?
 
       # node with two children: Get the
       # inorder successor (smallest
@@ -78,6 +75,17 @@ class Tree
     root
   end
 
+  def find(root, value)
+    return 'Value not in tree' if root.nil?
+    return root if root.data == value
+
+    if value < root.data
+      root.left = find(root.left, value)
+    elsif value > root.data
+      root.right = find(root.right, value)
+    end
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
@@ -88,4 +96,6 @@ end
 my_array = [2, 1, 3, 4, 5, 6, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 
 tree = Tree.new(my_array)
+root = tree.root
 tree.pretty_print
+p tree.find(root, 21)
