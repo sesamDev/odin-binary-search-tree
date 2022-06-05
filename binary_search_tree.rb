@@ -1,3 +1,5 @@
+require 'pry-byebug'
+
 class Node
   include Comparable
   attr_accessor :data, :left, :right
@@ -44,6 +46,38 @@ class Tree
     root
   end
 
+  def min_value_node(node)
+    current = node
+    current = current.left until current.left.nil?
+    current.data
+  end
+
+  def delete_node(root, value)
+    root if root.nil?
+
+    if value < root.data
+      root.left = delete_node(root.left, value)
+    elsif value > root.data
+      root.right = delete_node(root.right, value)
+    else
+      # node with only one child or no child
+      if root.left.nil?
+        return root.right
+      elsif root.right.nil?
+        return root.left
+      end
+
+      # node with two children: Get the
+      # inorder successor (smallest
+      # in the right subtree)
+      root.data = min_value_node(root.right)
+
+      # Delete the inorder successor
+      root.right = delete_node(root.right, root.data)
+    end
+    root
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
@@ -51,9 +85,7 @@ class Tree
   end
 end
 
-my_array = [2, 1, 3, 4, 5, 6, 12]
+my_array = [2, 1, 3, 4, 5, 6, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 
 tree = Tree.new(my_array)
-tree.pretty_print
-tree.insert(tree.root, 13)
 tree.pretty_print
