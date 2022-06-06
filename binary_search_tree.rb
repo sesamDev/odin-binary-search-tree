@@ -35,7 +35,7 @@ class Tree
     root
   end
 
-  def insert(root, value)
+  def insert(root = @root, value)
     root = Node.new(value) if root.nil?
 
     if value < root.data
@@ -130,20 +130,39 @@ class Tree
     result unless block_given?
   end
 
-  def height(root)
-    # code
+  def height(node)
+    return -1 if node.nil?
+
+    left = height(node.left)
+    right = height(node.right)
+
+    left > right ? left + 1 : right + 1
   end
 
-  def depth(node)
-    # code
+  def depth(root, node, counter = 0)
+    return counter if root.data == node
+
+    counter += 1
+    if node > root.data
+      depth(root.right, node, counter)
+    else
+      depth(root.left, node, counter)
+    end
   end
 
-  def balanced?
-    # code
+  def balanced?(root)
+    return if root.nil?
+
+    l = height(root.left)
+    r = height(root.right)
+
+    # if statment to prevent negative numbers
+    l > r ? l - r.abs <= 1 : r - l.abs <= 1
   end
 
   def rebalance
-    # code
+    self.arr = inorder(root)
+    self.root = build_tree(arr, 0, arr.length - 1)
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -153,9 +172,15 @@ class Tree
   end
 end
 
-my_array = [2, 1, 3, 4, 5, 6, 12]
+my_array = [2, 1, 3, 4, 5, 10, 17, 20, 25, 26, 27]
 
 tree = Tree.new(my_array)
-root = tree.root
 tree.pretty_print
-tree.postorder(root) { |n| p n }
+p tree.balanced?(tree.root)
+tree.insert(28)
+tree.insert(29)
+tree.pretty_print
+p tree.balanced?(tree.root)
+tree.rebalance
+tree.pretty_print
+p tree.balanced?(tree.root)
