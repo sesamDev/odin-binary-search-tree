@@ -86,6 +86,66 @@ class Tree
     end
   end
 
+  def level_order(root)
+    return if root.nil?
+
+    queue = [root]
+    result = []
+    until queue.empty?
+      current = queue.shift
+      block_given? ? yield(current) : result << current.data
+      queue << current.left unless current.left.nil?
+      queue << current.right unless current.right.nil?
+    end
+    result unless block_given?
+  end
+
+  def inorder(root, result = [], &block)
+    return if root.nil?
+
+    inorder(root.left, result, &block)
+    block_given? ? yield(root.data) : result.push(root.data)
+    inorder(root.right, result, &block)
+
+    result unless block_given?
+  end
+
+  def preorder(root, result = [], &block)
+    return if root.nil?
+
+    block_given? ? yield(root.data) : result.push(root.data)
+    preorder(root.left, result, &block)
+    preorder(root.right, result, &block)
+
+    result unless block_given?
+  end
+
+  def postorder(root, result = [], &block)
+    return if root.nil?
+
+    postorder(root.left, result, &block)
+    postorder(root.right, result, &block)
+    block_given? ? yield(root.data) : result.push(root.data)
+
+    result unless block_given?
+  end
+
+  def height(root)
+    # code
+  end
+
+  def depth(node)
+    # code
+  end
+
+  def balanced?
+    # code
+  end
+
+  def rebalance
+    # code
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
@@ -93,9 +153,9 @@ class Tree
   end
 end
 
-my_array = [2, 1, 3, 4, 5, 6, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+my_array = [2, 1, 3, 4, 5, 6, 12]
 
 tree = Tree.new(my_array)
 root = tree.root
 tree.pretty_print
-p tree.find(root, 21)
+tree.postorder(root) { |n| p n }
