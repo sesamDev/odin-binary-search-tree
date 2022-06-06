@@ -86,7 +86,7 @@ class Tree
     end
   end
 
-  def level_order(root)
+  def level_order(root = self.root)
     return if root.nil?
 
     queue = [root]
@@ -100,7 +100,7 @@ class Tree
     result unless block_given?
   end
 
-  def inorder(root, result = [], &block)
+  def inorder(root = self.root, result = [], &block)
     return if root.nil?
 
     inorder(root.left, result, &block)
@@ -110,7 +110,7 @@ class Tree
     result unless block_given?
   end
 
-  def preorder(root, result = [], &block)
+  def preorder(root = self.root, result = [], &block)
     return if root.nil?
 
     block_given? ? yield(root.data) : result.push(root.data)
@@ -120,7 +120,7 @@ class Tree
     result unless block_given?
   end
 
-  def postorder(root, result = [], &block)
+  def postorder(root = self.root, result = [], &block)
     return if root.nil?
 
     postorder(root.left, result, &block)
@@ -150,7 +150,7 @@ class Tree
     end
   end
 
-  def balanced?(root)
+  def balanced?(root = self.root)
     return if root.nil?
 
     l = height(root.left)
@@ -172,15 +172,31 @@ class Tree
   end
 end
 
-my_array = [2, 1, 3, 4, 5, 10, 17, 20, 25, 26, 27]
+# Driver script
 
-tree = Tree.new(my_array)
-tree.pretty_print
-p tree.balanced?(tree.root)
-tree.insert(28)
-tree.insert(29)
-tree.pretty_print
-p tree.balanced?(tree.root)
+# Create a binary search tree from an array of random numbers (Array.new(15) { rand(1..100) })
+tree = Tree.new(Array.new(15) { rand(1..100) })
+# Confirm that the tree is balanced by calling #balanced?
+p tree.balanced?
+# Print out all elements in level, pre, post, and in order
+p tree.level_order
+p tree.preorder
+p tree.postorder
+p tree.inorder
+# Unbalance the tree by adding several numbers > 100
+tree.insert(110)
+tree.insert(120)
+tree.insert(130)
+tree.insert(140)
+tree.insert(150)
+# Confirm that the tree is unbalanced by calling #balanced?
+p tree.balanced?
+# Balance the tree by calling #rebalance
 tree.rebalance
-tree.pretty_print
-p tree.balanced?(tree.root)
+# Confirm that the tree is balanced by calling #balanced?
+p tree.balanced?
+# Print out all elements in level, pre, post, and in order
+p tree.level_order
+p tree.preorder
+p tree.postorder
+p tree.inorder
